@@ -6,4 +6,9 @@
         select id,username,password
         from sys_user
     </select>
+
+    <insert id="insertSingle" parameterType="cn.zephyr.entity.SysUser" >
+        insert into sys_user (id,username,password)
+        values(#{id},#{username},#{password})
+    </insert>
 </mapper>

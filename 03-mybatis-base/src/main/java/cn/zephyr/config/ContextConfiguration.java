@@ -81,7 +81,7 @@ public class ContextConfiguration {
         MapperScannerConfigurer msc = new MapperScannerConfigurer();
         msc.setSqlSessionFactoryBeanName("sqlSessionFactory");
         msc.setBasePackage("cn.zephyr.mapper");
-        return msc;
+         return msc;
     }
 
 
