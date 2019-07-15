@@ -5,9 +5,7 @@ package cn.zephyr.framework;
  * @Description:
  * @Date: 2019-07-13 17:23
  */
-public class MyExecutor {
+public interface MyExecutor {
 
-    public <T> T query(String statement, String parameter) {
-        return (T)null;
-    }
+    <T> T query(String statement, String parameter);
 }

@@ -11,7 +11,7 @@ public class MySqlSession {
 
     private MyConfiguration configuration;
 
-    public MySqlSession(MyExecutor executor, MyConfiguration configuration) {
+    public  MySqlSession(MyConfiguration configuration,MyExecutor executor ) {
         this.executor = executor;
         this.configuration = configuration;
     }
@@ -24,7 +24,7 @@ public class MySqlSession {
      * @return
      */
     public <T> T getMapper(Class<T> clazz){
-        return configuration.getMapper(clazz);
+        return configuration.getMapper(clazz,this);
     }
 
     public <T> T selectOne(String statement,String parameter){
