@@ -1,6 +1,6 @@
 ## 一、多线程专题
 1. 多线程基础（已梳理，对应分支：[01-multithread-basic](https://github.com/zephyrlai/zephyr-arch/tree/01-multithread-basic)）
-1. Java内存模型
+1. Java内存模型（已梳理，对应分支：[02-java-memory-model](https://github.com/zephyrlai/zephyr-arch/tree/02-java-memory-model)）
 1. 多线程之间的通讯
 1. 线程池原理分析
 1. Callable与Future模式
