@@ -181,7 +181,78 @@
             }
         }   
         ```  
-    ![](src/main/resources/images/0206.png)    
+    ![](src/main/resources/images/0206.png)   
+1. 重排序：
+    1. 案例：起2个线程，互相交换值，理论上可能出现的结果是(1,0)、(0,1)、(1,1)，但是由于重排序的原因，还会有(0,0)的情况出现
+    1. 代码示例：
+        ```java
+        public class ResortDemo {
+        
+            private static Integer a = 0,b = 0;
+            private static Integer x = 0,y = 0;
+        
+            public static void main(String[] args) throws InterruptedException {
+                do{
+                    a=b=x=y=0;
+                    Thread thread01 = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            a = 1;  // 1
+                            x = b;  // 2
+                        }
+                    });
+                    Thread thread02 = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            b = 1;  // 3
+                            y = a;  // 4
+                        }
+                    });
+                    thread01.start();
+                    thread02.start();
+                    thread01.join();thread02.join();
+                    System.out.println("(" + x + "," + y + ")");
+                }while(x!=0 || y!=0);
+            }
+        }
+        ```  
+        ![](src/main/resources/images/0206.png)  
+    1. 定义：为了提高程序的执行效率，不具备数据依赖性的2个步骤，可能将不会被顺序执行； 
+    1. 数据依赖性：如果两个操作访问同一个变量，且这两个操作中有一个为写操作，此时这两个操作之间就存在数据依赖性。     
+    1. as-if-serial语义：  
+        1. 不管怎么重排序（编译器和处理器为了提高并行度），（单线程）程序的执行结果不能被改变
+        1. 案例：2数相加
+            1. 代码：     
+                ``` java    
+                int a=1;    // 步骤A
+                int b=2;    // 步骤B
+                int c = a + b;  // 步骤C
+                ```
+            1. 依赖关系：C依赖于A、B，而A、B互不依赖
+            1. 经过重排序之后又2种可能的执行路径：A->B->C、B->A->C  
+    1. 程序排序规则：
+        1. 根据Java内存模型中的规定，可以总结出以下几条happens-before规则，这些规则保证了happens-before前后两个操作不会被重排序且后者对前者的内存可见。
+            1. 程序次序法则：线程中的每个动作A都happens-before于该线程中的每一个动作B，其中，在程序中，所有的动作B都能出现在A之后。
+            1. 监视器锁法则：对一个监视器锁的解锁 happens-before于每一个后续对同一监视器锁的加锁。
+            1. volatile变量法则：对volatile域的写入操作happens-before于每一个后续对同一个域的读写操作。
+            1. 线程启动法则：在一个线程里，对Thread.start的调用会happens-before于每个启动线程的动作。
+            1. 线程终结法则：线程中的任何动作都happens-before于其他线程检测到这个线程已经终结、或者从Thread.join调用中成功返回，或Thread.isAlive返回false。
+            1. 中断法则：一个线程调用另一个线程的interrupt happens-before于被中断的线程发现中断。
+            1. 终结法则：一个对象的构造函数的结束happens-before于这个对象finalizer的开始。
+            1. 传递性：如果A happens-before于B，且B happens-before于C，则A happens-before于C
+        1. 根据happens-before的程序顺序规则，上面2数相加的示例代码存在三个happens-before关系：  
+            1. A happens-before B；
+            1. B happens-before C；
+            1. A happens-before C；  
+        1. 如果A happens- before B，JMM并不要求A一定要在B之前执行。JMM仅仅要求前一个操作（执行的结果）对后一个操作可见，
+        且前一个操作（执行的结果）按顺序排在第二个操作之前。这里操作A的执行结果不需要对操作B可见；而且重排序操作A和操作B后的执行结果，与操作A和操作B按happens- before顺序执行的结果一致。
+        在这种情况下，JMM会认为这种重排序并不非法（not illegal），JMM允许这种重排序 
+            
+> 参考：  
+>[美团技术博客](https://tech.meituan.com/2014/09/23/java-memory-reordering.html)    
+>《Java并发编程实战》
+>[深入理解 Java 内存模型（二）——重排序](https://www.infoq.cn/article/java-memory-model-2/)
+ 
 > todo：  
 synchronized底层 实现原理（monitor）  
 JVM内存结构：堆、栈、方法区、寄存器
