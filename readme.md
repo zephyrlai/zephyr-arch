@@ -2,7 +2,7 @@
 1. 多线程基础（已梳理，对应分支：[01-multithread-basic](https://github.com/zephyrlai/zephyr-arch/tree/01-multithread-basic)）
 1. Java内存模型（已梳理，对应分支：[02-java-memory-model](https://github.com/zephyrlai/zephyr-arch/tree/02-java-memory-model)）
 1. 多线程之间的通讯（已梳理，对应分支：[03-communication-between-multithread](https://github.com/zephyrlai/zephyr-arch/tree/03-communication-between-multithread)）
-1. 线程池原理分析
+1. 线程池原理分析（已梳理，对应分支：[04-thread-pool-analyse](https://github.com/zephyrlai/zephyr-arch/tree/04-thread-pool-analyse)）
 1. Callable与Future模式
 1. 锁的深入化
 1. Disruptor框架
