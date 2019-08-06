@@ -13,7 +13,7 @@ public class FutureClient {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                // 模拟业务请求
+                // 模拟业务请求（构造方法中调用了Thread.sleep()方法）
                 MockData mockRequest = new MockData(params + "--哈哈");
                 futureMockRequest.setResult(mockRequest);
             }
