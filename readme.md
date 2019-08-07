@@ -3,9 +3,8 @@
 1. Java内存模型（已梳理，对应分支：[02-java-memory-model](https://github.com/zephyrlai/zephyr-arch/tree/02-java-memory-model)）
 1. 多线程之间的通讯（已梳理，对应分支：[03-communication-between-multithread](https://github.com/zephyrlai/zephyr-arch/tree/03-communication-between-multithread)）
 1. 线程池原理分析（已梳理，对应分支：[04-thread-pool-analyse](https://github.com/zephyrlai/zephyr-arch/tree/04-thread-pool-analyse)）
-1. Callable与Future模式（已梳理，对应分支：[05-future-mode-and-java-lock](https://github.com/zephyrlai/zephyr-arch/tree/05-future-mode-and-java-lock)）
-1. 锁的深入化
-1. Disruptor框架
+1. Callable与Future模式、锁的深入化（已梳理，对应分支：[05-future-mode-and-java-lock](https://github.com/zephyrlai/zephyr-arch/tree/05-future-mode-and-java-lock)）
+1. Disruptor框架（已梳理，对应分支：[06-disruptor-framework](https://github.com/zephyrlai/zephyr-arch/tree/06-disruptor-framework)）
 
 ## 二、设计模式专题
 1. 反射机制与5种单例创建方式
