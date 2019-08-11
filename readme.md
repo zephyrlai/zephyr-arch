@@ -7,7 +7,7 @@
 1. Disruptor框架（已梳理，对应分支：[06-disruptor-framework](https://github.com/zephyrlai/zephyr-arch/tree/06-disruptor-framework)）
 
 ## 二、设计模式专题
-1. 反射机制与5种单例创建方式
+1. 反射机制与5种单例创建方式（已梳理，对应分支：[07-reflection-mechanism-and-singleton-mode](https://github.com/zephyrlai/zephyr-arch/tree/07-reflection-mechanism-and-singleton-mode)）
 1. 工厂模式与代理模式
 1. 建造者模式、模板方法、适配器模式、外观模式
 1. 策略模式、原型模式
