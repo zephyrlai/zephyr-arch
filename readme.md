@@ -1,4 +1,4 @@
-##08. 工厂模式与代理模式
+## 08. 工厂模式与代理模式
 ### 一、 工厂模式
 #### 1. 工厂模式的定义   
 “Define an interface for creating an object, but let subclasses decide which class to instantiate. 
@@ -263,7 +263,11 @@ Factory Method lets a class defer instantiation to subclasses.”
     当工厂方法模式中抽象工厂与具体工厂合并，提供一个统一的工厂来创建产品对象，并将创建对象的工厂方法设计为静态方法时，工厂方法模式退化成简单工厂模式。
           
 ### 1. 代理模式
-1. todo
+1. 静态代理
+1. 动态代理
+    1. 基于JDK的动态代理
+    1. 基于CGLIB的动态代理
 
->[深入理解工厂模式](https://segmentfault.com/a/1190000015050674)
->[me115/design_patterns](https://github.com/me115/design_patterns/tree/master/creational_patterns)
+>[深入理解工厂模式](https://segmentfault.com/a/1190000015050674)  
+>[me115/design_patterns](https://github.com/me115/design_patterns/tree/master/creational_patterns)  
+>[轻松学，Java 中的代理模式及动态代理](https://blog.csdn.net/briblue/article/details/73928350)  
