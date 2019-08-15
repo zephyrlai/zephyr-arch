@@ -9,7 +9,8 @@ package proxy.cglib;
 public class CglibProxyMain {
     public static void main(String[] args) {
         CglibProxy cglibProxy = new CglibProxy();
-        BusiDao realBusiDao = (BusiDao)cglibProxy.getInstance(new BusiDaoImpl());
+        BusiDaoImpl realBusiDao = (BusiDaoImpl)cglibProxy.getInstance(new BusiDaoImpl());
+        System.err.println(realBusiDao.getClass().getName());
         realBusiDao.updateByPrimaryKey("1");
     }
 }

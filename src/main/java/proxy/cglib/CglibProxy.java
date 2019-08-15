@@ -16,12 +16,16 @@ public class CglibProxy implements MethodInterceptor {
 
     private Object targetObject;
 
+    //为目标对象生成代理对象
     public Object getInstance(Object target) {
         // 设置需要创建子类的类
         this.targetObject = target;
         Enhancer enhancer = new Enhancer();
+        //设置父类
         enhancer.setSuperclass(target.getClass());
+        //设置回调函数
         enhancer.setCallback(this);
+        //创建子类对象代理
         return enhancer.create();
     }
 

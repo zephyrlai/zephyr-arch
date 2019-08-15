@@ -6,8 +6,8 @@ package proxy.cglib;
  * @Description:
  * @Date: 2019-08-14 23:41
  */
-public class BusiDaoImpl implements BusiDao {
-    @Override
+public class BusiDaoImpl{
+
     public void updateByPrimaryKey(String id){
         System.err.println("==执行sql更新==");
     }

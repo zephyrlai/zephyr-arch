@@ -263,11 +263,270 @@ Factory Method lets a class defer instantiation to subclasses.”
     当工厂方法模式中抽象工厂与具体工厂合并，提供一个统一的工厂来创建产品对象，并将创建对象的工厂方法设计为静态方法时，工厂方法模式退化成简单工厂模式。
           
 ### 1. 代理模式
-1. 静态代理
-1. 动态代理
-    1. 基于JDK的动态代理
-    1. 基于CGLIB的动态代理
+#### 1. 静态代理
+1. 若代理类在程序运行前就已经存在，那么这种代理方式被成为 __静态代理__，这种情况下的代理类通常都是我们在Java代码中定义的。 
+通常情况下， 静态代理中的代理类和委托类会实现同一接口或是派生自相同的父类。
+1. 案例：静态代理为数据库操作添加事务
+    1. dao接口（被代理的抽象对象）
+        ```java
+        public interface BusiDao {
+            void updateByPrimaryKey(String id);
+        }
+        ```
+    1. dao实现类（被代理的具体对象）
+        ```java
+        public class BusiDaoImpl implements BusiDao {
+            @Override
+            public void updateByPrimaryKey(String id){
+                System.err.println("==执行sql更新==");
+            }
+        }
+        ```
+    1. 代理类（针对dao接口，专用代理类）
+        ```java
+        public class StaticProxy implements BusiDao {
+            private BusiDao busiDao;
+        
+            public StaticProxy(BusiDao busiDao) {
+                this.busiDao = busiDao;
+            }
+        
+            @Override
+            public void updateByPrimaryKey(String id) {
+                System.err.println("==>开启数据库事务");
+                busiDao.updateByPrimaryKey(id);
+                System.err.println("<==关闭数据库事务");
+            }
+        }
+        ```
+    1. 调用：
+        ```java
+        public class StaticProxyMain {
+            public static void main(String[] args) {
+                BusiDao realBusiDao = new StaticProxy(new BusiDaoImpl());
+                System.err.println(realBusiDao);
+                realBusiDao.updateByPrimaryKey("1");
+            }
+        }
+        ```
+    1. 控制台输出：  
+        ```text
+        proxy.stat.StaticProxy@5e2de80c
+        ==>开启数据库事务
+        ==执行sql更新==
+        <==关闭数据库事务
+        ```  
+可以看到，真正调用的(干活儿的)是代理类，但是这样的代理类只能固定代理某个接口的某个方法，如果需要为当前接口的其他方法提供代理，
+还需要写新的代理类，功能上过于局限，长久来看代码书写工作量大。
+#### 2. 动态代理
+写在前面：基于JDK的动态代理仅支持为接口类实现代理（基于反射机制）；基于CGLIB的动态代理支持为普通类（未实现任何接口）提供代理（基于字节码技术）。
+1. 基于JDK的动态代理
+    1. 案例：动态代理为数据库操作添加事务
+        1. dao接口（被代理的抽象对象）
+            ```java
+            public interface BusiDao {
+                void updateByPrimaryKey(String id);
+            }
+            ```
+        1. dao实现类（被代理的具体对象）
+            ```java
+            public class BusiDaoImpl implements BusiDao {
+                @Override
+                public void updateByPrimaryKey(String id){
+                    System.err.println("==执行sql更新==");
+                }
+            }
+            ```
+        1. 代理类（通用，当前接口的所有方法可用）
+            ```java
+            public class JdkProxy implements InvocationHandler {
+            
+                private BusiDao target;
+            
+                public JdkProxy(BusiDao target) {
+                    this.target = target;
+                }
+            
+                @Override
+                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    Object result;
+                    System.err.println("==>开启数据库事务");
+                    result = method.invoke(target, args);
+                    System.err.println("<==关闭数据库事务");
+                    return result;
+                }
+            }
+            ```
+        1. 调用：
+            ```java
+            public class JdkProxyMain {
+            
+                public static void main(String[] args) {
+                    JdkProxy jdkProxy = new JdkProxy(new BusiDaoImpl());
+                    BusiDao realBusiDao = (BusiDao)Proxy.newProxyInstance(BusiDaoImpl.class.getClassLoader(),BusiDaoImpl.class.getInterfaces(),jdkProxy);
+                    System.err.println(realBusiDao.getClass().getName());
+                    realBusiDao.updateByPrimaryKey("1");
+                }
+            }
+            ```
+        1. 控制台输出：  
+            ```text
+            com.sun.proxy.$Proxy0
+            ==>开启数据库事务
+            ==执行sql更新==
+            <==关闭数据库事务
+            ``` 
+    1. 元素概述：
+        1. __Proxy__：核心类，为我们创建代理类；
+            ``` java
+            public static Object newProxyInstance(ClassLoader loader,
+                                                      Class<?>[] interfaces,
+                                                      InvocationHandler h)
+            
+            ```
+            1. loader 自然是类加载器
+            1. interfaces 代码要用来代理的接口
+            1. h 一个 InvocationHandler 对象
+        1. __InvocationHandler__：是一个接口，官方文档解释说，每个代理的实例都有一个与之关联的 InvocationHandler 实现类，如果代理的方法被调用，
+        那么代理便会通知和转发给内部的 InvocationHandler 实现类，由它决定处理。
+    1. JDK动态代理的秘密
+        Proxy类是怎么生成代理类的呢，代码上看最有"嫌疑"的应该是这一段代码```Proxy.newProxyInstance()```，估计是在这里利用了反射，我们点进去看一看：  
+        ``` java
+        /**
+         * Returns an instance of a proxy class for the specified interfaces
+         * that dispatches method invocations to the specified invocation
+         * handler.
+         */
+        public static Object newProxyInstance(ClassLoader loader,Class<?>[] interfaces,InvocationHandler h)throws IllegalArgumentException{
+            Objects.requireNonNull(h);
+            final Class<?>[] intfs = interfaces.clone();
+            final SecurityManager sm = System.getSecurityManager();
+            if (sm != null) {
+                checkProxyAccess(Reflection.getCallerClass(), loader, intfs);
+            }
+    
+            /*
+             * Look up or generate the designated proxy class.
+             */
+            Class<?> cl = getProxyClass0(loader, intfs);
+    
+            /*
+             * Invoke its constructor with the designated invocation handler.
+             */
+            try {
+                if (sm != null) {
+                    checkNewProxyPermission(Reflection.getCallerClass(), cl);
+                }
+                final Constructor<?> cons = cl.getConstructor(constructorParams);
+                final InvocationHandler ih = h;
+                if (!Modifier.isPublic(cl.getModifiers())) {
+                    AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                        public Void run() {
+                            cons.setAccessible(true);
+                            return null;
+                        }
+                    });
+                }
+                return cons.newInstance(new Object[]{h});
+            } catch (...) {
+                throw ...;
+            }
+        }
+        ```
+       ```Proxy.newProxyInstance()```确实会帮我们生成代理对象，类型由```Class<?> cl = getProxyClass0(loader, intfs);```确定；
+       ``` java
+       /**
+        * Generate a proxy class.  Must call the checkProxyAccess method
+        * to perform permission checks before calling this.
+        */
+       private static Class<?> getProxyClass0(ClassLoader loader,
+                                              Class<?>... interfaces) {
+           if (interfaces.length > 65535) {
+               throw new IllegalArgumentException("interface limit exceeded");
+           }
+   
+           // If the proxy class defined by the given loader implementing
+           // the given interfaces exists, this will simply return the cached copy;
+           // otherwise, it will create the proxy class via the ProxyClassFactory
+           return proxyClassCache.get(loader, interfaces);
+       }
+       ```
+       （从注释上看）代理类是直接通过缓存获取的，如果获取不到，会通过 ProxyClassFactory（Proxy类的私有静态内部类） 生成。
+       ``` java
+       // 主要代码（看得懂的代码）如下
+       // Proxy class 的前缀是 “$Proxy”，
+       // prefix for all proxy class names
+       private static final String proxyClassNamePrefix = "$Proxy";
 
+       // next number to use for generation of unique proxy class names
+       private static final AtomicLong nextUniqueNumber = new AtomicLong();
+       
+       long num = nextUniqueNumber.getAndIncrement();
+       
+       String proxyName = proxyPkg + proxyClassNamePrefix + num;
+       ```  
+       动态生成的代理类名称是包名+$Proxy+id序号。  
+    1. 总结：动态生成的【包名+$Proxy+id】类实现了要代理的接口。 【包名+$Proxy+id】类对象通过调用 InvocationHandler来执行任务。
+1. 基于CGLIB的动态代理
+    1. 案例：动态代理为数据库操作添加事务
+        1. dao实现类（被代理的具体对象，无接口实现）
+            ```java
+           public class BusiDaoImpl{
+           
+               public void updateByPrimaryKey(String id){
+                   System.err.println("==执行sql更新==");
+               }
+           }
+            ```
+        1. 代理类（通用，当前接口的所有方法可用）
+            ```java
+            public class CglibProxy implements MethodInterceptor {
+            
+                private Object targetObject;
+            
+                //为目标对象生成代理对象
+                public Object getInstance(Object target) {
+                    // 设置需要创建子类的类
+                    this.targetObject = target;
+                    Enhancer enhancer = new Enhancer();
+                    //设置父类
+                    enhancer.setSuperclass(target.getClass());
+                    //设置回调函数
+                    enhancer.setCallback(this);
+                    //创建子类对象代理
+                    return enhancer.create();
+                }
+            
+            
+                @Override
+                public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+                    Object result;
+                    System.err.println("==>开启数据库事务");
+                    result = method.invoke(targetObject, args);
+                    System.err.println("<==关闭数据库事务");
+                    return result;
+                }
+            }
+            ```
+        1. 调用：
+            ```java
+           public class CglibProxyMain {
+               public static void main(String[] args) {
+                   CglibProxy cglibProxy = new CglibProxy();
+                   BusiDaoImpl realBusiDao = (BusiDaoImpl)cglibProxy.getInstance(new BusiDaoImpl());
+                   System.err.println(realBusiDao.getClass().getName());
+                   realBusiDao.updateByPrimaryKey("1");
+               }
+           }
+            ```
+        1. 控制台输出：  
+            ```text
+            proxy.cglib.BusiDaoImpl$$EnhancerByCGLIB$$ef609478
+            ==>开启数据库事务
+            ==执行sql更新==
+            <==关闭数据库事务
+            ``` 
+    1. cglib代理无需实现接口，通过生成类字节码实现代理，比反射稍快，不存在性能问题，但cglib会继承目标对象，需要重写方法，所以目标对象不能为final类。
 >[深入理解工厂模式](https://segmentfault.com/a/1190000015050674)  
 >[me115/design_patterns](https://github.com/me115/design_patterns/tree/master/creational_patterns)  
 >[轻松学，Java 中的代理模式及动态代理](https://blog.csdn.net/briblue/article/details/73928350)  
