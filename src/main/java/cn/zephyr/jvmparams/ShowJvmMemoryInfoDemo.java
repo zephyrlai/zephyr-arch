@@ -1,4 +1,4 @@
-package cn.zephyr;
+package cn.zephyr.jvmparams;
 
 
 /**
@@ -9,7 +9,7 @@ package cn.zephyr;
  */
 public class ShowJvmMemoryInfoDemo {
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         System.err.println("最大内存"+Runtime.getRuntime().maxMemory()/1024/1024+"M");
         System.err.println("可使用内存"+Runtime.getRuntime().freeMemory()/1024/1024+"M");
         System.err.println("(创建对象前)已使用内存"+Runtime.getRuntime().totalMemory()/1024/1024+"M");
@@ -18,5 +18,5 @@ public class ShowJvmMemoryInfoDemo {
             byte[] b = new byte[1024*1024*2];
         }
         System.out.println("(创建对象后)已使用内存"+Runtime.getRuntime().totalMemory()/1024/1024+"M");
-    }
+    }*/
 }

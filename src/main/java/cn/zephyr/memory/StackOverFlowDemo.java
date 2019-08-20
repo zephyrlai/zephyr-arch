@@ -7,7 +7,7 @@ package cn.zephyr.memory;
  * @Date: 2019-08-20 23:49
  */
 public class StackOverFlowDemo {
-    // 递归深度计数器
+    /*// 递归深度计数器
     private static Integer counter=0;
     // -Xss1m的递归深度：11641；-Xss5m的递归深度：63267
     public static void main(String[] args) {
@@ -23,5 +23,5 @@ public class StackOverFlowDemo {
     private static void count(){
         counter++;
         count();
-    }
+    }*/
 }
