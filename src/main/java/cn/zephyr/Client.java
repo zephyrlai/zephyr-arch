@@ -16,8 +16,16 @@ public class Client {
         sequenceList.add("start");
         sequenceList.add("light");
         sequenceList.add("stop");
-        BMWCarModel bmwCarModel = new BMWCarModel();
-        bmwCarModel.setSequenceList(sequenceList);
-        bmwCarModel.run();
+        CarModel carModel = new BMWCarModel();
+        carModel.setSequenceList(sequenceList);
+        carModel.run();
+
+        sequenceList.clear();
+        sequenceList.add("light");
+        sequenceList.add("start");
+        sequenceList.add("stop");
+        carModel = new TeslaCarModel();
+        carModel.setSequenceList(sequenceList);
+        carModel.run();
     }
 }
