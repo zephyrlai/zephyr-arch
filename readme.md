@@ -12,8 +12,8 @@
 1. 建造者模式、模板方法、适配器模式、外观模式
 1. 策略模式、原型模式
 
-## 三、性能优化专题
+## 三、性能优化专题12-gc-and-jmeter
 1. Java内存结构与垃圾回收机制算法分析(已梳理，对应分支：[11-jmm-and-gc](https://github.com/zephyrlai/zephyr-arch/tree/11-jmm-and-gc))
-1. 垃圾收集器&性能监控工具&实战参数调优案例分析
+1. 垃圾收集器&性能监控工具&实战参数调优案例分析(已梳理，对应分支：[12-gc-and-jmeter](https://github.com/zephyrlai/zephyr-arch/tree/12-gc-and-jmeter))
 1. 动态字节码技术
 1. 类加载器
