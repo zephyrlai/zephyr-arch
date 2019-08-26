@@ -1,5 +1,7 @@
 package cn.zephyr.aop;
 
+import cn.zephyr.aop.service.OrderService;
+import cn.zephyr.aop.service.impl.OrderServiceImpl;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
@@ -14,10 +16,13 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class DemoAspect {
 
-    @Pointcut("within(cn.zephyr.aop.service..*)")
+    @DeclareParents(value="cn.zephyr.aop.service.impl.UserServiceImpl",defaultImpl = cn.zephyr.aop.service.impl.OrderServiceImpl.class)
+    public OrderService orderService;
+
+//    @Pointcut("within(cn.zephyr.aop.service..*)")
     private void myPointCut(){};
 
-    @Before("myPointCut()")
+//    @Before("myPointCut()")
     public void BeforeHander(){
         System.err.println("==前置通知==");
         try {
@@ -27,7 +32,7 @@ public class DemoAspect {
         }
     }
 
-    @After("execution( * cn.zephyr.aop.service..*(..))")
+//    @After("execution( * cn.zephyr.aop.service..*(..))")
     public void AfterHandler(){
         try {
             Thread.sleep(10);
@@ -37,7 +42,7 @@ public class DemoAspect {
         System.err.println("==后置通知==");
     }
 
-    @AfterReturning("execution( * cn.zephyr.aop.service..*(..))")
+//    @After("args(java.lang.Object)")
     public void AfterReturningHandler(){
         try {
             Thread.sleep(10);
@@ -47,7 +52,7 @@ public class DemoAspect {
         System.err.println("==执行后通知==");
     }
 
-    @AfterThrowing("execution( * cn.zephyr.aop.service..*(..))")
+//    @AfterThrowing("execution( * cn.zephyr.aop.service..*(..))")
     public void AfterThrowingHandler(){
         try {
             Thread.sleep(10);

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
  * @Date: 2019/8/24 17:56
  */
 @SpringBootApplication
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class WebApplication {
 
     public static void main(String[] args) {

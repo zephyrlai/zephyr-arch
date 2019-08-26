@@ -15,7 +15,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean insert(Object object) {
         System.out.println("===执行sql insert===");
-        int num = 1/0;
         return true;
     }
 }

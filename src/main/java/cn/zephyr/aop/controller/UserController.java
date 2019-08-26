@@ -1,5 +1,6 @@
 package cn.zephyr.aop.controller;
 
+import cn.zephyr.aop.service.OrderService;
 import cn.zephyr.aop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 @RestController
 public class UserController {
+
     @Autowired
     private UserService userService;
+
 
     @RequestMapping("/")
     public String index() throws InterruptedException {
@@ -26,6 +29,9 @@ public class UserController {
 
     @RequestMapping("2")
     public String index02(){
+        userService.insert(new Object());
+        OrderService orderService1 = (OrderService)userService;
+        orderService1.queryList();
         return "index02";
     }
 }
