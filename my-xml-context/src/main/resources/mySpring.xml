@@ -1,0 +1,3 @@
+<beans >
+    <bean id="userService" name="cn.zephyr.service.impl.UserServiceImpl"></bean>
+</beans>
