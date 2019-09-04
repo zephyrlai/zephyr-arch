@@ -14,7 +14,7 @@ public class MyProxyMain {
         UserMapper userMapper = (UserMapper) Proxy.newProxyInstance(
                 UserMapper.class.getClassLoader(),
                 new Class[]{UserMapper.class},
-                new MyInvocationHandler(UserMapper.class)
+                new MyInvocationHandler()
         );
         int i = userMapper.insertSelective();
         System.err.println("sql返回结果："+i);
